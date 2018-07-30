@@ -10,9 +10,16 @@ def single_attachment(attachment_list, attach_size = 1):
 
     soa_index = rand(0, attach_size) #sets the index for sights or attachments
     soa = attachment_list[soa_index] #sight or attachment
+    print('length:', len(attachment_list[soa_index])-1)
     equip = rand(0, len(attachment_list[soa_index])-1) #equips the attachment in sights or attachments
     attachment = attachment_list[soa_index][equip] #pulls the string
     return attachment
+
+def shotgun_attachments(attach_list):
+    attach_index = rand(0, len(attach_list)-1)
+    attachment = attach_list[attach_index]
+    return attachment
+
 
 def two_attachment(attachment_list, attach_size = 1):
     soa_index = rand(0, attach_size)
@@ -31,6 +38,21 @@ def two_attachment(attachment_list, attach_size = 1):
             equip2 = rand(0, len(attachment_list[soa_index2])-1)
     second_attach = attachment_list[soa_index2][equip2]
     attachment = attachment + ' & ' + second_attach
+    return attachment
+
+def two_pistol_attach(attach_list):
+    soa_index = rand(0, len(attach_list)-1)
+    attachment = attach_list[soa_index]
+    second_attachment = attach_list[rand(0, len(attach_list)-1)]
+    while attachment == "Akimbo" and second_attachment == "Tactical Knife":
+        second_attachment = attach_list[rand(0, len(attach_list)-1)]
+        #print("2a test", second_attachment)
+    while attachment == "Tactical Knife" and second_attachment == "Akimbo":
+        second_attachment = attach_list[rand(0, len(attach_list)-1)]
+        #print("2b test", second_attachment)
+    while second_attachment == attachment:
+        second_attachment = attach_list[rand(0, len(attach_list)-1)]
+    attachment = attachment + ' & ' + second_attachment
     return attachment
 
 
@@ -60,9 +82,9 @@ heavy_pistol_attachments = ['FMJ', 'Akimbo', 'Tactical Knife']
 p_attachments = [light_pistol_attachments, heavy_pistol_attachments]
 
 mp = ['PP2000', 'G18', 'M93 RAFFICA', 'TMP']#1
-mp_attachments = ['Red Dot Sight', 'Holographic Sight', 'Silencer', 'FMJ', 'Extended Mags', 'Akimbo']
+mp_attachments = ['Red Dot Sight', 'Holographic Sight', 'Silencer', 'FMJ', 'Extended Mags', 'Akimbo']#should be setup to avoid sights in akimbo
 
-shotguns = ['SPAS-12', 'AA-12', 'STRIKER', 'RANGER', 'M1014', 'MODEL 1887']#2
+shotguns = ['SPAS-12', 'AA-12', 'STRIKER', 'M1014', 'RANGER', 'MODEL 1887']#2
 modern_attachments = ['Silencer', 'Grip', 'FMJ', 'Extended Mags', 'Red Dot Sight', 'Holographic Sight']
 old_attachments = ['Akimbo', 'FMJ']
 shot_attachments = [modern_attachments, old_attachments]
@@ -86,14 +108,14 @@ secondaries = [pistols, mp, shotguns, launchers, oma]
 prim_cat = rand(0,4) #primary weapon category index
 prim_weap = rand(0, len(primaries[prim_cat])-1) #primary weapon index
 sec_cat = rand(0,3) #secondary weapon category index
-sec_cat = 2
+sec_cat = 1 #specific category test
 sec_weap = rand(0, len(secondaries[sec_cat])-1) #secondary weapon index
 
 #--------------------------------------------------------
 #Perks
 #--------------------------------------------------------
 perk1_ind = rand(0, 4)
-#perk1_ind = 2 #bling test
+perk1_ind = 2 #bling test
 if perk1[perk1_ind] == 'One Man Army':
     sec_cat = 4
     sec_weap = 0
@@ -138,19 +160,24 @@ if perk1[perk1_ind] != 'Bling': #without bling
     elif sec_cat == 1:
         pistol_attachment = single_attachment(mp_attachments, 0)
     elif sec_cat == 2:
-        if sec_weap != 3 and sec_weap != 5: #excludes the two older shotguns
-            pistol_attachment = single_attachment(shot_attachments, 1)
+        if sec_weap >= 0 and sec_weap < 4:
+            pistol_attachment = shotgun_attachments(modern_attachments)
         else:
-            pistol_attachment = single_attachment(shot_attachments, 1)
-            while pistol_attachment != 'FMJ' or pistol_attachment != 'Akimbo':
-                pistol_attachment = single_attachment(shot_attachments, 1)
+            pistol_attachment = shotgun_attachments(old_attachments)
     elif sec_cat == 3: #launcher
         pass
 else:
     if sec_cat == 0: #with bling
-        pass
+        if sec_weap == 0 or sec_weap == 2:
+            pistol_attachment = two_pistol_attach(light_pistol_attachments)
+            while pistol_attachment == 'Tactical Knife & Akimbo' or pistol_attachment == 'Akimbo & Tactical Knife':
+                pistol_attachment = two_pistol_attach(light_pistol_attachments)
+        else:
+            pistol_attachment = two_pistol_attach(heavy_pistol_attachments)
+            while pistol_attachment == 'Tactical Knife & Akimbo' or pistol_attachment == 'Akimbo & Tactical Knife':
+                pistol_attachment = two_pistol_attach(heavy_pistol_attachments)
     elif sec_cat == 1:
-        pass
+        pistol_attachment = two_pistol_attach(mp_attachments)
     elif sec_cat == 2:
         pass
     elif sec_cat == 3:
