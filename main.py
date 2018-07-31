@@ -1,16 +1,17 @@
+#!/usr/bin/env python3
 '''This is a random class generator for modern warfare 2, maybe more games will be added eventually'''
 
 from random import randint as rand
 
 def single_attachment(attachment_list, attach_size = 1):
-    if attach_size == 0:
+    if attach_size == 0: #For the machine pistols
         equip = rand(0, len(attachment_list)-1)
         attachment = attachment_list[equip]
         return attachment
 
     soa_index = rand(0, attach_size) #sets the index for sights or attachments
     soa = attachment_list[soa_index] #sight or attachment
-    equip = rand(0, len(attachment_list[soa_index])-1) #equips the attachment in sights or attachments
+    equip = rand(0, len(attachment_list[soa_index])-1) #gets the index for attachment in sights or attachments
     attachment = attachment_list[soa_index][equip] #pulls the string
     return attachment
 
@@ -31,15 +32,17 @@ def two_shotgun_attachments(attach_list):
     return attachment
 
 def two_attachment(attachment_list, attach_size = 1):
+    #first attachment generation
     soa_index = rand(0, attach_size)
     soa = attachment_list[soa_index] #sight or attachment
-    equip = rand(0, len(attachment_list[soa_index])-1)
+    equip = rand(0, len(attachment_list[soa_index])-1)#pulling the index of string literal of the attachment
     attachment = attachment_list[soa_index][equip]
+    #second attachment generation
     soa_index2 = rand(0, 1)
     if soa_index == 0 and soa_index2 == 0: #making sure there arent two sights
         soa_index2 = 1
     soa = attachment_list[soa_index2] #sight or attachment
-    equip2 = rand(0, len(attachment_list[soa_index2])-1)
+    equip2 = rand(0, len(attachment_list[soa_index2])-1) #pulling the index of string literal of the attachment
     while equip2 == equip:  #making sure there arent two of the same attachment
          equip2 = rand(0, len(attachment_list[soa_index2])-1)
     if soa_index == 1 and attachment_list[0] == 'M4A1': #making sure there arent glauncher and shotgun for ar's
@@ -116,6 +119,7 @@ secondaries = [pistols, mp, shotguns, launchers, oma]
 #Weapons
 #-------------------------------------------------------
 prim_cat = rand(0,4) #primary weapon category index
+#prim_cat = 1 #specific category test
 prim_weap = rand(0, len(primaries[prim_cat])-1) #primary weapon index
 sec_cat = rand(0,3) #secondary weapon category index
 #sec_cat = 0 #specific category test
@@ -166,7 +170,6 @@ if perk1[perk1_ind] != 'Bling': #without bling
         else:
             pistol_attachment = single_attachment(p_attachments, 1)
             while pistol_attachment == 'Extended Mags' or pistol_attachment == 'Silencer': #disregarding the attachments
-                print("wrong")
                 pistol_attachment = single_attachment(p_attachments, 1)
 #------------------------------------------------------------
     elif sec_cat == 1:
@@ -209,7 +212,7 @@ lethal_equipment = l_equipment[rand(0,5)]
 tactical_equipment = t_equipment[rand(0, 2)]
 #---------------------------------------------------------------
 cac = primaries[prim_cat][prim_weap] + ' w/ ' + attachment + '\n' + secondaries[sec_cat][sec_weap] + ' w/ ' + pistol_attachment
-cac = cac + '\n' + lethal_equipment + ' ' + tactical_equipment
+cac = cac + '\n' + lethal_equipment + ', ' + tactical_equipment
 cac = cac + '\n' + perk1[perk1_ind] + ', ' + perk2[perk2_ind] + ', ' + perk3[perk3_ind]
 cac = cac + '\n' + deathstreaks[rand(0,3)] + '\n'
 print(cac)
