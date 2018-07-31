@@ -10,16 +10,25 @@ def single_attachment(attachment_list, attach_size = 1):
 
     soa_index = rand(0, attach_size) #sets the index for sights or attachments
     soa = attachment_list[soa_index] #sight or attachment
-    print('length:', len(attachment_list[soa_index])-1)
     equip = rand(0, len(attachment_list[soa_index])-1) #equips the attachment in sights or attachments
     attachment = attachment_list[soa_index][equip] #pulls the string
     return attachment
 
 def shotgun_attachments(attach_list):
-    attach_index = rand(0, len(attach_list)-1)
+    attach_index = rand(0, len(attach_list)-1)#generates random number to pull out of the array
     attachment = attach_list[attach_index]
     return attachment
 
+def two_shotgun_attachments(attach_list):
+    attach_index = rand(0, len(attach_list)-1)
+    attachment = attach_list[attach_index]
+    second_attach_index = rand(0, len(attach_list)-1)
+    second_attachment = attach_list[second_attach_index]
+    while attachment == second_attachment: #making sure the attachments arent the same
+        second_attach_index = rand(0, len(attach_list)-1)
+        second_attachment = attach_list[second_attach_index]
+    attachment = attachment + ' & ' + second_attachment
+    return attachment
 
 def two_attachment(attachment_list, attach_size = 1):
     soa_index = rand(0, attach_size)
@@ -95,8 +104,9 @@ oma = ['One Man Army']#4
 perk1 = ['Marathon', 'Sleight of Hand', 'Bling', 'Scavenger', 'One Man Army']#0
 perk2 = ['Stopping Power', 'Lightweight', 'Hardline', 'Cold Blooded', 'Danger Close']#1
 perk3 = ['Commando', 'Steady Aim', 'Ninja', 'Scrambler', 'Sitrep', 'Last Stand']#2
-deathstreaks = ['Copycat', 'Painkiller', 'Last Stand', 'Martyrdom']#0
-
+deathstreaks = ['Copycat', 'Painkiller', 'Final Stand', 'Martyrdom']#0
+l_equipment = ['Frag Grenade', 'Semtex Grenade', 'Throwing Knife', 'Tactical Insertion', 'Blast Shield', 'C4']
+t_equipment = ['Stun Grenade', 'Flashbang Grenade', 'Smoke Grenade']
 
 
 primaries = [rifles, smg, lmg, snipers, shield]
@@ -108,14 +118,14 @@ secondaries = [pistols, mp, shotguns, launchers, oma]
 prim_cat = rand(0,4) #primary weapon category index
 prim_weap = rand(0, len(primaries[prim_cat])-1) #primary weapon index
 sec_cat = rand(0,3) #secondary weapon category index
-sec_cat = 1 #specific category test
+#sec_cat = 0 #specific category test
 sec_weap = rand(0, len(secondaries[sec_cat])-1) #secondary weapon index
 
 #--------------------------------------------------------
 #Perks
 #--------------------------------------------------------
 perk1_ind = rand(0, 4)
-perk1_ind = 2 #bling test
+#perk1_ind = 2 #bling test
 if perk1[perk1_ind] == 'One Man Army':
     sec_cat = 4
     sec_weap = 0
@@ -151,21 +161,26 @@ else:
 pistol_attachment = ''
 if perk1[perk1_ind] != 'Bling': #without bling
     if sec_cat == 0:
-        if sec_weap == 0 or sec_weap == 1:
+        if sec_weap == 0 or sec_weap == 2:
             pistol_attachment = single_attachment(p_attachments, 1)
         else:
             pistol_attachment = single_attachment(p_attachments, 1)
             while pistol_attachment == 'Extended Mags' or pistol_attachment == 'Silencer': #disregarding the attachments
+                print("wrong")
                 pistol_attachment = single_attachment(p_attachments, 1)
+#------------------------------------------------------------
     elif sec_cat == 1:
         pistol_attachment = single_attachment(mp_attachments, 0)
+#------------------------------------------------------------
     elif sec_cat == 2:
         if sec_weap >= 0 and sec_weap < 4:
             pistol_attachment = shotgun_attachments(modern_attachments)
         else:
             pistol_attachment = shotgun_attachments(old_attachments)
+#------------------------------------------------------------
     elif sec_cat == 3: #launcher
-        pass
+        pistol_attachment = 'N/A'
+#------------------------------------------------------------
 else:
     if sec_cat == 0: #with bling
         if sec_weap == 0 or sec_weap == 2:
@@ -176,14 +191,25 @@ else:
             pistol_attachment = two_pistol_attach(heavy_pistol_attachments)
             while pistol_attachment == 'Tactical Knife & Akimbo' or pistol_attachment == 'Akimbo & Tactical Knife':
                 pistol_attachment = two_pistol_attach(heavy_pistol_attachments)
+#------------------------------------------------------------
     elif sec_cat == 1:
         pistol_attachment = two_pistol_attach(mp_attachments)
+#------------------------------------------------------------
     elif sec_cat == 2:
-        pass
-    elif sec_cat == 3:
-        pass
-
+        if sec_weap >= 0 and sec_weap < 4:
+            pistol_attachment = two_shotgun_attachments(modern_attachments)
+        else:
+            pistol_attachment = two_shotgun_attachments(old_attachments)
+#------------------------------------------------------------
+    elif sec_cat == 3: #launcher
+        pistol_attachment = 'N/A'
+#---------------------------------------------------------------
+#Equipment
+lethal_equipment = l_equipment[rand(0,5)]
+tactical_equipment = t_equipment[rand(0, 2)]
+#---------------------------------------------------------------
 cac = primaries[prim_cat][prim_weap] + ' w/ ' + attachment + '\n' + secondaries[sec_cat][sec_weap] + ' w/ ' + pistol_attachment
+cac = cac + '\n' + lethal_equipment + ' ' + tactical_equipment
 cac = cac + '\n' + perk1[perk1_ind] + ', ' + perk2[perk2_ind] + ', ' + perk3[perk3_ind]
 cac = cac + '\n' + deathstreaks[rand(0,3)] + '\n'
 print(cac)
